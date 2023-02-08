@@ -1,4 +1,4 @@
-const itemsController = require('../controllers/items')
+import { getItem, getItems, updateItem, deleteItem, addItem } from '../controllers/items.js'
 
 const ItemSchema = {
 	type: 'object',
@@ -17,7 +17,7 @@ const getItemsOptions = {
 			}
 		}
 	},
-	handler: itemsController.getItems
+	handler: getItems
 }
 
 
@@ -27,7 +27,7 @@ const getItemOptions = {
 			200: ItemSchema
 		}
 	},
-	handler: itemsController.getItem
+	handler: getItem
 }
 
 const postItemOptions = {
@@ -43,7 +43,7 @@ const postItemOptions = {
 			201: ItemSchema
 		}
 	},
-	handler: itemsController.addItem
+	handler: addItem
 }
 
 const deleteItemOptions = {
@@ -57,7 +57,7 @@ const deleteItemOptions = {
 			}
 		}
 	},
-	handler: itemsController.deleteItem
+	handler: deleteItem
 }
 
 const updateItemOptions = {
@@ -73,10 +73,10 @@ const updateItemOptions = {
 			200: ItemSchema
 		}
 	},
-	handler: itemsController.updateItem
+	handler: updateItem
 }
 
-function itemRoutes(fastify, options, done) {
+export default function itemRoutes(fastify, options, done) {
 	fastify.get('/items', getItemsOptions)
 
 	fastify.get('/items/:id', getItemOptions)
@@ -90,4 +90,3 @@ function itemRoutes(fastify, options, done) {
 	done()
 }
 
-module.exports = itemRoutes
