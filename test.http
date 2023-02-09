@@ -23,3 +23,17 @@ Content-Type: application/json
 {
     "name": "Hush Puppies"
 }
+
+
+
+###Post Single Product
+POST http://localhost:5000/products HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Belmonte",
+    "item": "63e4f99623f27c4e625db1d6"
+}
+
+###Get All Products
+GET http://localhost:5000/products HTTP/1.1
