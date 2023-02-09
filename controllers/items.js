@@ -1,5 +1,10 @@
 import Item from '../models/item.js'
 
+const existsItem = async (name) => {
+	const item = await Item.findOne({ name })
+	return item
+}
+
 export const getItems = async (req, reply) => {
 	const items = await Item.find()
 	reply.send(items)
@@ -22,12 +27,14 @@ export const deleteItem = async (req, reply) => {
 	reply.send({ deleted: Boolean(item.deletedCount) })
 }
 
-export const addItem = (req, reply) => {
+export const addItem = async (req, reply) => {
 	const { name } = req.body
-	const data = {
-		name
+	if (await existsItem(name)) {
+		reply.code(500).send({})
+		return
 	}
-	const item = new Item(data);
+
+	const item = new Item({ name });
 	item.save(function (err) {
 		if (err) return handleError(err);
 	});
