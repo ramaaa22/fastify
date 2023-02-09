@@ -58,3 +58,10 @@ export const updateItem = async (req, reply) => {
 	reply.send(item)
 
 }
+
+export const getTotal = async (req, reply) => {
+	const items = await Item.find()
+	let total = 0
+	items.map(it => total += it.price)
+	reply.send({ total })
+}

@@ -1,4 +1,4 @@
-import { getItem, getItems, updateItem, deleteItem, addItem } from '../controllers/items.js'
+import { getItem, getItems, updateItem, deleteItem, addItem, getTotal } from '../controllers/items.js'
 
 const ItemSchema = {
 	type: 'object',
@@ -21,6 +21,20 @@ const getItemsOptions = {
 	handler: getItems
 }
 
+
+const getTotalOptions = {
+	schema: {
+		response: {
+			200: {
+				type: 'object',
+				properties: {
+					total: { type: 'integer' }
+				}
+			}
+		}
+	},
+	handler: getTotal
+}
 
 const getItemOptions = {
 	schema: {
@@ -81,6 +95,8 @@ export default function itemRoutes(fastify, options, done) {
 	fastify.get('/items', getItemsOptions)
 
 	fastify.get('/items/:id', getItemOptions)
+
+	fastify.get('/items/total', getTotalOptions)
 
 	fastify.post('/items', postItemOptions)
 

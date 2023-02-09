@@ -4,6 +4,9 @@ GET http://localhost:5000/items HTTP/1.1
 ###Get Single Item
 GET http://localhost:5000/items/63e4ead26bc8a5145e480bd3 HTTP/1.1
 
+###Get Total price
+GET http://localhost:5000/items/total HTTP/1.1
+
 ###Post Single Item
 POST http://localhost:5000/items HTTP/1.1
 Content-Type: application/json
