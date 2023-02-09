@@ -4,7 +4,8 @@ const ItemSchema = {
 	type: 'object',
 	properties: {
 		_id: { type: 'string' },
-		name: { type: 'string' }
+		name: { type: 'string' },
+		price: { type: 'integer' }
 	}
 }
 
@@ -64,9 +65,9 @@ const updateItemOptions = {
 	schema: {
 		body: {
 			type: 'object',
-			required: ['name'],
 			properties: {
-				name: { type: 'string' }
+				name: { type: 'string' },
+				price: { type: 'integer' }
 			}
 		},
 		response: {

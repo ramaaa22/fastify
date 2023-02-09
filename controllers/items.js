@@ -28,13 +28,15 @@ export const deleteItem = async (req, reply) => {
 }
 
 export const addItem = async (req, reply) => {
-	const { name } = req.body
-	if (await existsItem(name)) {
+	const data = req.body
+	if (await existsItem(data.name)) {
 		reply.code(500).send({})
 		return
 	}
-
-	const item = new Item({ name });
+	if (!data.price) {
+		data.price = 0
+	}
+	const item = new Item(data);
 	item.save(function (err) {
 		if (err) return handleError(err);
 	});
@@ -43,11 +45,11 @@ export const addItem = async (req, reply) => {
 
 export const updateItem = async (req, reply) => {
 	const { id } = req.params
-	const { name } = req.body
+	const data = req.body
 	let item
 
 	try {
-		item = await Item.findByIdAndUpdate(id, { name })
+		item = await Item.findByIdAndUpdate(id, data, { new: true })
 	} catch (error) {
 		item = {}
 		console.error(error)

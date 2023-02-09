@@ -3,6 +3,7 @@ import { Schema, model } from 'mongoose'
 const itemSchema = new Schema(
 	{
 		name: String,
+		price: Number,
 	},
 	{
 		timestamps: true,
