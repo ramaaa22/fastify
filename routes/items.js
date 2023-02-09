@@ -3,7 +3,7 @@ import { getItem, getItems, updateItem, deleteItem, addItem } from '../controlle
 const ItemSchema = {
 	type: 'object',
 	properties: {
-		id: { type: 'string' },
+		_id: { type: 'string' },
 		name: { type: 'string' }
 	}
 }
