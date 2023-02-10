@@ -2,24 +2,43 @@
 GET http://localhost:5000/items HTTP/1.1
 
 ###Get Single Item
-GET http://localhost:5000/items/1 HTTP/1.1
+GET http://localhost:5000/items/63e4ead26bc8a5145e480bd3 HTTP/1.1
+
+###Get Total price
+GET http://localhost:5000/items/total HTTP/1.1
 
 ###Post Single Item
 POST http://localhost:5000/items HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Crocs"
+    "name": "Ferli",
+    "price": 10000
 }
 
 ###Delete Single Item
-DELETE http://localhost:5000/items/72032901-c2cc-4a4e-8dba-7cbcc05a4269 HTTP/1.1
+DELETE http://localhost:5000/items/63e4eff543dcef095508b658 HTTP/1.1
 
 
 ###Update Single Item
-PUT http://localhost:5000/items/1 HTTP/1.1
+PUT http://localhost:5000/items/6e5281df14cd57484ecc090 HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Any"
+    "name": "Elemento",
+    "price": 4000
 }
+
+
+
+###Post Single Product
+POST http://localhost:5000/products HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Belmonte",
+    "item": "63e4f99623f27c4e625db1d6"
+}
+
+###Get All Products
+GET http://localhost:5000/products HTTP/1.1

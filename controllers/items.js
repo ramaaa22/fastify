@@ -1,45 +1,67 @@
-import items from '../items.js'
-import { v4 as uuidv4 } from 'uuid'
+import Item from '../models/item.js'
 
+const existsItem = async (name) => {
+	const item = await Item.findOne({ name })
+	return item
+}
 
-export const getItems = (req, reply) => {
+export const getItems = async (req, reply) => {
+	const items = await Item.find()
 	reply.send(items)
 }
 
-export const getItem = (req, reply) => {
+export const getItem = async (req, reply) => {
 	const { id } = req.params
-	const item = items.find(it => it.id === id) || {}
+	let item
+	try {
+		item = await Item.findById(id)
+	} catch (error) {
+		item = {}
+	}
 	reply.send(item)
 }
 
-export const deleteItem = (req, reply) => {
+export const deleteItem = async (req, reply) => {
 	const { id } = req.params
-	const count = items.length
-	items = items.filter(it => it.id != id)
-	reply.send({ deleted: count !== items.length })
+	const item = await Item.deleteOne({ _id: id })
+	reply.send({ deleted: Boolean(item.deletedCount) })
 }
 
-export const addItem = (req, reply) => {
-	const { name } = req.body
-	const item = {
-		name,
-		id: uuidv4()
+export const addItem = async (req, reply) => {
+	const data = req.body
+	if (await existsItem(data.name)) {
+		reply.code(500).send({})
+		return
 	}
-	items = [...items, item]
+	if (!data.price) {
+		data.price = 0
+	}
+	const item = new Item(data);
+	item.save(function (err) {
+		if (err) return handleError(err);
+	});
 	reply.code(201).send(item)
 }
 
-export const updateItem = (req, reply) => {
-	console.log('here')
+export const updateItem = async (req, reply) => {
 	const { id } = req.params
-	const { name } = req.body
-	let item = items.find(it => it.id === id)
-	console.log('item', item)
-	item = { ...item, name }
-	console.log('item', item)
-	console.log(items)
-	items = items.filter(it => it.id !== id)
-	items = [...items, item]
+	const data = req.body
+	let item
+
+	try {
+		item = await Item.findByIdAndUpdate(id, data, { new: true })
+	} catch (error) {
+		item = {}
+		console.error(error)
+	}
+
 	reply.send(item)
 
+}
+
+export const getTotal = async (req, reply) => {
+	const items = await Item.find()
+	let total = 0
+	items.map(it => total += it.price)
+	reply.send({ total })
 }

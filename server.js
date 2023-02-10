@@ -1,10 +1,15 @@
 import Fastify from 'fastify'
 import itemRoutes from './routes/items.js'
+import productRoutes from './routes/products.js'
 const fastify = Fastify({ logger: true })
+import { connection } from './utils/mongose.js'
 
 fastify.register(itemRoutes)
+fastify.register(productRoutes)
 
 const PORT = 5000
+
+
 
 const start = async () => {
     try {
