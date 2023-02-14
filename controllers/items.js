@@ -6,7 +6,7 @@ const existsItem = async (name) => {
 }
 
 export const getItems = async (req, reply) => {
-	const items = await Item.find()
+	const items = await Item.find().populate('product', 'name')
 	reply.send(items)
 }
 

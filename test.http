@@ -12,8 +12,8 @@ POST http://localhost:5000/items HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Ferli",
-    "price": 10000
+    "name": "HP",
+    "price": 40000
 }
 
 ###Delete Single Item
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 {
     "name": "Belmonte",
-    "item": "63e4f99623f27c4e625db1d6"
+    "item": "63ea637aed057dc831f53d48"
 }
 
 ###Get All Products

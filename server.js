@@ -3,12 +3,15 @@ import itemRoutes from './routes/items.js'
 import productRoutes from './routes/products.js'
 const fastify = Fastify({ logger: true })
 import { connection } from './utils/mongose.js'
+import cors from '@fastify/cors'
 
 fastify.register(itemRoutes)
 fastify.register(productRoutes)
+await fastify.register(cors, {
+    origin: true
+})
 
 const PORT = 5000
-
 
 
 const start = async () => {
