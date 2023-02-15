@@ -6,24 +6,37 @@ const existsItem = async (name) => {
 }
 
 export const getItems = async (req, reply) => {
-	const items = await Item.find().populate('product', 'name')
-	reply.send(items)
+	try {
+		const items = await Item.find().populate('product', 'name')
+		reply.send(items)
+	} catch (error) {
+		reply.send(error)
+	}
 }
 
 export const getItem = async (req, reply) => {
 	const { id } = req.params
-	let item
 	try {
-		item = await Item.findById(id)
+		const item = await Item.findById(id)
+		if (item) {
+			reply.send(item)
+		}
+		throw new Error('Item does not exist')
 	} catch (error) {
-		item = {}
+		reply.status(404).send(error)
 	}
-	reply.send(item)
+
 }
 
 export const deleteItem = async (req, reply) => {
 	const { id } = req.params
-	const item = await Item.deleteOne({ _id: id })
+	let item = {}
+	try {
+		item = await Item.deleteOne({ _id: id })
+		console.log('item', item)
+	} catch (error) {
+		reply.status(404).send(error)
+	}
 	reply.send({ deleted: Boolean(item.deletedCount) })
 }
 
