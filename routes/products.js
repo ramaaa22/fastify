@@ -1,4 +1,4 @@
-import { addProduct, getProducts } from '../controllers/products.js'
+import { addProduct, getProducts, deleteProduct } from '../controllers/products.js'
 
 const ProductSchema = {
 	type: 'object',
@@ -43,12 +43,28 @@ const postProductOptions = {
 	handler: addProduct
 }
 
+const deleteProductOptions = {
+	schema: {
+		response: {
+			200: {
+				type: 'object',
+				properties: {
+					deleted: { type: 'boolean' }
+				}
+			}
+		}
+	},
+	handler: deleteProduct
+}
+
 
 
 export default function productRoutes(fastify, options, done) {
 	fastify.get('/products', getProductsOptions)
 
 	fastify.post('/products', postProductOptions)
+
+	fastify.delete('/products/:id', deleteProductOptions)
 
 
 	done()

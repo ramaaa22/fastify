@@ -25,3 +25,9 @@ export const getProducts = async (req, reply) => {
 	console.log(products)
 	reply.send(products)
 }
+
+export const deleteProduct = async (req, reply) => {
+	const { id } = req.params
+	const product = await Product.deleteOne({ _id: id })
+	reply.send({ deleted: Boolean(product.deletedCount) })
+}
