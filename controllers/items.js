@@ -6,10 +6,12 @@ const existsItem = async (name) => {
 }
 
 export const getItems = async (req, reply) => {
+	console.log('entro aca')
 	try {
 		const items = await Item.find().populate('product', 'name')
 		reply.send(items)
 	} catch (error) {
+		console.log('aca')
 		reply.send(error)
 	}
 }

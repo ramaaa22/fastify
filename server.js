@@ -1,29 +1,19 @@
-import Fastify from 'fastify'
-import itemRoutes from './routes/items.js'
-import productRoutes from './routes/products.js'
-const fastify = Fastify({ logger: true })
+'use strict'
 import { connection } from './utils/mongose.js'
-import cors from '@fastify/cors'
-
-fastify.register(itemRoutes)
-fastify.register(productRoutes)
-await fastify.register(cors, {
-    origin: true
+import server from './app.js'
+const ser = server({
+    logger: {
+        level: 'info',
+        transport: {
+            target: 'pino-pretty'
+        }
+    }
 })
 
-const PORT = 5000
 
-
-const start = async () => {
-    try {
-        const options = {
-            port: PORT
-        }
-        await fastify.listen(options)
-    } catch (error) {
-        fastify.log.error(error)
+ser.listen({ port: 5000 }, (err, address) => {
+    if (err) {
+        ser.log.error(err)
         process.exit(1)
     }
-}
-
-start()
+})
