@@ -17,13 +17,10 @@ export const getItems = async (req, reply) => {
 export const getItem = async (req, reply) => {
 	const { id } = req.params
 	try {
-		const item = await Item.findById(id)
-		if (item) {
-			reply.send(item)
-		}
-		throw new Error('Item does not exist')
+		const item = await Item.findById(id) || {}
+		reply.send(item)
 	} catch (error) {
-		reply.status(404).send(error)
+		reply.send(error)
 	}
 
 }
@@ -33,7 +30,6 @@ export const deleteItem = async (req, reply) => {
 	let item = {}
 	try {
 		item = await Item.deleteOne({ _id: id })
-		console.log('item', item)
 	} catch (error) {
 		reply.status(404).send(error)
 	}
@@ -43,16 +39,22 @@ export const deleteItem = async (req, reply) => {
 export const addItem = async (req, reply) => {
 	const data = req.body
 	if (await existsItem(data.name)) {
-		reply.code(500).send({})
-		return
+		const error = new Error('The name exists')
+		return reply.code(500).send(error)
 	}
+
 	if (!data.price) {
 		data.price = 0
 	}
+
 	const item = new Item(data);
-	item.save(function (err) {
-		if (err) return handleError(err);
-	});
+
+	try {
+		item.save()
+	} catch (error) {
+		return reply.code(400).send(error)
+	}
+
 	reply.code(201).send(item)
 }
 
@@ -64,17 +66,25 @@ export const updateItem = async (req, reply) => {
 	try {
 		item = await Item.findByIdAndUpdate(id, data, { new: true })
 	} catch (error) {
-		item = {}
-		console.error(error)
+		return reply.send(error)
 	}
 
 	reply.send(item)
 
 }
 
+const test = () => {
+	throw new Error('errorete')
+}
+
 export const getTotal = async (req, reply) => {
-	const items = await Item.find()
 	let total = 0
-	items.map(it => total += it.price)
+	try {
+		const items = await Item.find()
+		items.map(it => total += it.price)
+	} catch (error) {
+		return reply.send(error)
+	}
+
 	reply.send({ total })
 }
