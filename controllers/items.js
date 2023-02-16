@@ -33,7 +33,7 @@ export const deleteItem = async (req, reply) => {
 	try {
 		item = await Item.deleteOne({ _id: id })
 	} catch (error) {
-		reply.status(404).send(error)
+		return reply.status(404).send(error)
 	}
 	reply.send({ deleted: Boolean(item.deletedCount) })
 }
