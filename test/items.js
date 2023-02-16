@@ -6,6 +6,7 @@ import { request } from 'undici'
 
 let item_id = ''
 const unexistent_id = 'blablabla'
+let total_prices = 0
 
 test('ITEMS GET', async t => {
 
@@ -13,6 +14,9 @@ test('ITEMS GET', async t => {
 
     const { body } = response
     const data = await body.json()
+
+    data.map(it => total_prices += it.price)
+
     t.equal(response.statusCode, 200, 'returns a status code of 200')
     t.equal(data.length, 2)
 })
@@ -129,3 +133,12 @@ test('ITEMS Try to delete unexistent item', async t => {
     t.equal(statusCode, 404, 'item to delete not found')
 })
 
+test('ITEMS Total', async t => {
+
+    const response = await request('http://localhost:5000/items/total')
+
+    const { body } = response
+    const { total } = await body.json()
+
+    t.equal(total, total_prices)
+})

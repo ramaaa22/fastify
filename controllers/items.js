@@ -1,8 +1,13 @@
 import Item from '../models/item.js'
 
 const existsItem = async (name) => {
-	const item = await Item.findOne({ name })
-	return item
+	try {
+		const item = await Item.findOne({ name })
+		return item
+	} catch (error) {
+		throw new Error(error)
+	}
+
 }
 
 export const getItems = async (req, reply) => {
