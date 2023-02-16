@@ -6,7 +6,6 @@ const existsItem = async (name) => {
 }
 
 export const getItems = async (req, reply) => {
-	console.log('entro aca')
 	try {
 		const items = await Item.find().populate('product', 'name')
 		reply.send(items)
@@ -64,6 +63,19 @@ export const updateItem = async (req, reply) => {
 	const { id } = req.params
 	const data = req.body
 	let item
+
+	const exists = await existsItem(data.name)
+
+	let itemId = id
+	try {
+		itemId = exists._id.toHexString()
+	} catch (error) {
+	}
+
+	if (exists && itemId !== id) {
+		const error = new Error('The name exists')
+		return reply.code(500).send(error)
+	}
 
 	try {
 		item = await Item.findByIdAndUpdate(id, data, { new: true })
