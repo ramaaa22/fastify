@@ -1,13 +1,13 @@
 'use strict'
 
 import { test } from 'tap'
-import build from './app.js'
-import { Client, request } from 'undici'
+
+import { request } from 'undici'
 
 let item_id = ''
+const unexistent_id = 'blablabla'
 
 test('ITEMS GET', async t => {
-    const app = build()
 
     const response = await request('http://localhost:5000/items')
 
@@ -18,7 +18,6 @@ test('ITEMS GET', async t => {
 })
 
 test('ITEMS Create an item', async t => {
-    const app = build()
 
     const item = {
         name: 'Testing',
@@ -43,8 +42,28 @@ test('ITEMS Create an item', async t => {
     t.equal(response.statusCode, 201, 'returns a status code of 201')
 })
 
-test('ITEMS Create an item wit the same name', async t => {
-    const app = build()
+test('ITEMS Update item created previously', async t => {
+    const item = {
+        price: 900
+    }
+    const response = await request(`http://localhost:5000/items/${item_id}`,
+        {
+            method: 'PUT',
+            body: JSON.stringify(item),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+
+    const { body } = response
+    const { price } = await body.json()
+
+    t.equal(response.statusCode, 200, 'succesfully modified')
+    t.equal(price, 900, `correct price ${price}`)
+})
+
+test('ITEMS Create an item with the same name', async t => {
 
     const item = {
         name: 'Testing'
@@ -60,13 +79,10 @@ test('ITEMS Create an item wit the same name', async t => {
             },
         })
 
-    const { body } = response
-
     t.equal(response.statusCode, 500, 'returns a status code of 500')
 })
 
 test('ITEMS Delete previous created item', async t => {
-    const app = build()
 
     const response = await request(`http://localhost:5000/items/${item_id}`,
         {
@@ -75,3 +91,17 @@ test('ITEMS Delete previous created item', async t => {
 
     t.equal(response.statusCode, 200, 'returns a status code of 200')
 })
+
+test('ITEMS Try to delete unexistent item', async t => {
+
+    const response = await request(`http://localhost:5000/items/${unexistent_id}`,
+        {
+            method: 'DELETE'
+        })
+
+    const { body } = response
+    const { statusCode } = await body.json()
+
+    t.equal(statusCode, 404, 'item to delete not found')
+})
+
